@@ -1,13 +1,13 @@
 <?php
 
-require_once("./classes/main.php");
+require_once("./classes/misc.class.php");
 // We need to use our $db variable (for mysqli) into the class
 
 $GLOBALS = array(
     'db' => $db
 );
 
-class User extends Main {
+class User extends Misc {
 
     protected $glob;
 
@@ -58,6 +58,17 @@ class User extends Main {
     	return $newPassword;
     }
 
+    public function getCurrentUser()
+    {
+    	if(isset($_COOKIE['userLogged'])){
+    		$user_array = unserialize(urldecode($_COOKIE['userLogged']));
+    		if(isset($user_array['id'])){
+    			return $user_array['id'];
+    		}
+    	}else{
+			die("Usuario no logeado");
+		} 	
+    }
     public function getUserData($userid)
     {
 
@@ -79,7 +90,6 @@ class User extends Main {
         }
     }
     
-
     public function isAdmin($userid)
     {
     	if($this->getRank($userid) > 1){
