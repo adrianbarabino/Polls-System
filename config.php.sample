@@ -1,0 +1,19 @@
+<?php 
+
+
+// Archivo de configuración
+
+
+$config = array(
+	"db_user" => "usuario",
+	"db_pass" => "password",
+	"db_host" => "localhost",
+	"db_port" => "3306",
+	"db_name" => "polls",
+	"web_title" => "Testing",
+	"theme" => "2014",
+	"admin_mail" => "email@provider.tld"
+	);
+
+
+?>
