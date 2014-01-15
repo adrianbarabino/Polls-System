@@ -39,40 +39,6 @@ class Vote extends Misc {
 			}
 		}
 	}
-	private function checkByIP($id_poll, $ip)
-		{
-			
-			$sql = sprintf("SELECT V.ip as 'ip', V.id_option, O.id, O.id_poll, P.id as 'idPoll' 
-			FROM polls P 
-			INNER JOIN options O on P.id = O.id_poll 
-			LEFT JOIN votes V on O.id = V.id_option 
-			WHERE P.id = '%s' AND ip = '%s' ", $id_poll, $ip);
-
-
-			$result = $this->glob['db']->query($sql); 
-	        if($result->num_rows > 0){
-	        	return true;
-			}else{
-				return false;
-			}
-		}
-
-	private function getPollByOption($id_option)
-	{
-		$id_option = intval($id_option);
-		// We connect the Votes table with Options and with the Polls by the ids.
-		$sql = sprintf("SELECT O.id, O.id_poll, P.id as 'idPoll' 
-		FROM options O 
-		INNER JOIN polls P on O.id_poll = P.id 
-		WHERE O.id = '%s' ", $id_option);
-		$result = $this->glob['db']->query($sql); 
-        if($row = $result->fetch_assoc()){
-        	return $row['idPoll'];
-        }else{
-        	return $this->glob['db']->error;
-        }
-		
-	}
 
     public function deleteVote($id_vote)
     {

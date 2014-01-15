@@ -18,9 +18,8 @@ class User extends Misc {
 
     private function checkMailFree($mail)
     {
-		$sql = sprintf("SELECT email from users where email = '%s' ", $mail);
-
-		$result = $this->glob['db']->query($sql); 
+        $result = $this->simpleSelect("users", "email", array("email", "=", $mail));
+        
 		if($result->num_rows > 0){
 			return false;
 		}else{
@@ -30,8 +29,7 @@ class User extends Misc {
 
     private function checkPwd($user, $pwd)
     {
-		$sql = sprintf("SELECT username, password FROM users WHERE username = '%s' AND password = '%s'", $user, $this->hashPwd($pwd));
-		$result = $this->glob['db']->query($sql); 
+        $result = $this->simpleSelect("users", "username, password", array("username = '".$user."' AND password", "=", $this->hashPwd($pwd)));
         if($result->num_rows > 0){
 			return true;
 		}else{
@@ -41,16 +39,17 @@ class User extends Misc {
 
     private function checkUsername($user)
     {
-		$sql = sprintf("SELECT username from users where username = '%s' ", $user);
 
+        $result = $this->simpleSelect("users", "username", array("username", "=", $user));
 
-		$result = $this->glob['db']->query($sql); 
 		if($result->num_rows > 0){
 			return false;
 		}else{
 			return true;
 		}
     }
+
+
 
     public function hashPwd($pwd)
     {
@@ -66,7 +65,7 @@ class User extends Misc {
     			return $user_array['id'];
     		}
     	}else{
-			die("Usuario no logeado");
+                return false;
 		} 	
     }
     public function getUserData($userid)
@@ -90,18 +89,24 @@ class User extends Misc {
         }
     }
     
-    public function isAdmin($userid)
+    public function isAdmin($userid = NULL)
     {
-    	if($this->getRank($userid) > 1){
-    		return true;
-    	}else{
+        if($userid == NULL)
+            $userid = $this->getCurrentUser();
+
+        if($this->getRank($userid) > 0){
+            return true;
+        }else{
     		return false;
     	}
     }
 
-    private function getRank($userid){
-		$sql = sprintf("SELECT rank from users where id = '%s' ", $userid);
-		$result = $this->glob['db']->query($sql); 
+
+    private function getRank($userid = NULL){
+        if($userid == NULL)
+            $userid = $this->getCurrentUser();
+
+		$result = $this->simpleSelect("users", "rank", array("id", "=", $userid));
         if($row = $result->fetch_assoc()){
         	return $row['rank'];
         }else{
@@ -110,8 +115,7 @@ class User extends Misc {
     }
     private function getUserId($username)
     {
-		$sql = sprintf("SELECT id from users where username = '%s' ", $username);
-		$result = $this->glob['db']->query($sql); 
+        $result = $this->simpleSelect("users", "id", array("username", "=", $username));
         if($row = $result->fetch_assoc()){
         	return $row['id'];
         }else{
@@ -155,6 +159,10 @@ class User extends Misc {
     	}
     }
 
+    public function editUser($id, $username, $pwd, $email, $rank)
+    {
+        # code...
+    }
     public function register($username, $pwd, $email, $rank = 0)
     {
     	if($this->checkMailFree($email))
