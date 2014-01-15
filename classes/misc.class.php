@@ -58,7 +58,8 @@ class Misc {
 	{
 		// Where array example: array (table, fields, where array);
 
-		$sql = sprintf("SELECT `%s` FROM %s WHERE `%s` %s '%s'", $fields, $table, $where_array[0], $where_array[1], $where_array[2]);
+		$sql = sprintf("SELECT %s FROM %s WHERE `%s` %s '%s'", $fields, $table, $where_array[0], $where_array[1], $where_array[2]);
+		
 		if($result = $this->glob['db']->query($sql)){
 			return $result;
 
@@ -69,7 +70,7 @@ class Misc {
 		}
 	}
 
-	public function advancedSelect($table, $fields_array, $where_array, $join_array)
+	public function advancedSelect($table, $fields_array, $where_array, $join_array = NULL, $limit = NULL)
 	{
 		// Example of advencedSelect:
 
@@ -83,6 +84,11 @@ class Misc {
 		// 		array("INNER", "author", "book.id_author", "=", "author.id")
 		// 		)
 		// 	);
+
+		// The example returns: 
+		// SELECT `books.name, books.id as BookID, author.id` FROM books 
+		// INNER JOIN author ON `book.id_author` = 'author.id' 
+		// WHERE `books.name` LIKE 'wars'
 
 
 
@@ -102,13 +108,13 @@ class Misc {
 			$whereString;
 
 			foreach ($where_array as $key) {
-				$whereString = sprintf("`%s` %s '%s' AND", $key[0], $key[1], $key[2]);
+				$whereString .= sprintf("%s %s '%s' AND", $key[0], $key[1], $key[2]);
 			}
-			$whereString = substr($whereString, 0, -3);
+			$whereString .= substr($whereString, 0, -3);
 
 		}else{
 			$key = $where_array[0];
-			$whereString = sprintf("`%s` %s '%s' ", $key[0], $key[1], $key[2]);
+			$whereString .= sprintf("%s %s '%s' ", $key[0], $key[1], $key[2]);
 		}
 
 		// Looking inside Join Array
@@ -121,10 +127,10 @@ class Misc {
 			foreach ($join_array as $key) {
 				if($i = 0){
 
-					$joinString = sprintf("%s JOIN %s ON `%s` %s '%s' ", $key[0], $key[1], $key[2], $key[3], $key[4]);
+					$joinString .= sprintf("%s JOIN %s ON %s %s %s ", $key[0], $key[1], $key[2], $key[3], $key[4]);
 				}else{
 
-					$joinString = sprintf("%s JOIN %s ON `%s` %s '%s' ", $key[0], $key[1], $key[2], $key[3], $key[4]);
+					$joinString .= sprintf("%s JOIN %s ON %s %s %s ", $key[0], $key[1], $key[2], $key[3], $key[4]);
 				}
 				$i++;
 			}
@@ -133,8 +139,7 @@ class Misc {
 
 
 
-		$sql = sprintf("SELECT `%s` FROM %s %s WHERE %s", $fields, $table, $joinString, $whereString);
-		print_r($sql);
+		$sql = sprintf("SELECT %s FROM %s %s WHERE %s", $fields, $table, $joinString, $whereString);
 		if($result = $this->glob['db']->query($sql)){
 			return $result;
 
@@ -148,7 +153,7 @@ class Misc {
 
 	public function deleteToDB($table, $where_array)
 	{
-		$sql = sprintf("DELETE FROM `%s` WHERE `%s` %s '%s'", $table, $where_array[0], $where_array[1], $where_array[2]);
+		$sql = sprintf("DELETE FROM `%s` WHERE %s %s '%s'", $table, $where_array[0], $where_array[1], $where_array[2]);
 		if($result = $this->glob['db']->query($sql)){
 			return true;
 		}else{

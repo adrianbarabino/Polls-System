@@ -17,11 +17,13 @@ class Option extends Misc {
 
     public function getAllVotesByOption($id_option) 
     {
-    	$sql = sprintf("SELECT V.id_option, O.id, O.id_poll
-    			FROM votes V 
-    			INNER JOIN options O on V.id_option = O.id
-    			WHERE O.id = '%s' ", $id_option);
-		if($result = $this->glob['db']->query($sql)){
+        $fields_array = array("V.id_option", "O.id", "O.id_poll");
+        $where_array = array(array("O.id", "=", $id_option));
+        $join_array = array(
+            array("INNER", "options O", "V.id_option", "=", "O.id")            
+            );
+
+        if($result = $this->advancedSelect("votes V",$fields_array,$where_array, $join_array)){
 			return $result->num_rows;
 		}else{
 			// Error.... 
