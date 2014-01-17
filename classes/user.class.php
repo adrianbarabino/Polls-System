@@ -18,35 +18,23 @@ class User extends Misc {
 
     private function checkMailFree($mail)
     {
-        $result = $this->simpleSelect("users", "email", array("email", "=", $mail));
+        $result = $this->_db->simpleSelect("users", "email", array("email", "=", $mail));
         
-		if($result->num_rows > 0){
-			return false;
-		}else{
-			return true;
-		}
+		return $this->haveRows($result);
     }
 
     private function checkPwd($user, $pwd)
     {
-        $result = $this->simpleSelect("users", "username, password", array("username = '".$user."' AND password", "=", $this->hashPwd($pwd)));
-        if($result->num_rows > 0){
-			return true;
-		}else{
-			return false;
-		}
+        $result = $this->_db->simpleSelect("users", "username, password", array("username = '".$user."' AND password", "=", $this->hashPwd($pwd)));
+        return $this->haveRows($result);
     }
 
     private function checkUsername($user)
     {
 
-        $result = $this->simpleSelect("users", "username", array("username", "=", $user));
+        $result = $this->_db->simpleSelect("users", "username", array("username", "=", $user));
 
-		if($result->num_rows > 0){
-			return false;
-		}else{
-			return true;
-		}
+		return $this->haveRows($result);
     }
 
 
@@ -60,7 +48,7 @@ class User extends Misc {
     public function getCurrentUser()
     {
     	if(isset($_COOKIE['userLogged'])){
-    		$user_array = unserialize(urldecode($_COOKIE['userLogged']));
+    		$user_array = json_decode(urldecode($_COOKIE['userLogged']));
     		if(isset($user_array['id'])){
     			return $user_array['id'];
     		}
@@ -106,7 +94,7 @@ class User extends Misc {
         if($userid == NULL)
             $userid = $this->getCurrentUser();
 
-		$result = $this->simpleSelect("users", "rank", array("id", "=", $userid));
+		$result = $this->_db->simpleSelect("users", "rank", array("id", "=", $userid));
         if($row = $result->fetch_assoc()){
         	return $row['rank'];
         }else{
@@ -115,7 +103,7 @@ class User extends Misc {
     }
     private function getUserId($username)
     {
-        $result = $this->simpleSelect("users", "id", array("username", "=", $username));
+        $result = $this->_db->simpleSelect("users", "id", array("username", "=", $username));
         if($row = $result->fetch_assoc()){
         	return $row['id'];
         }else{
@@ -126,7 +114,7 @@ class User extends Misc {
     private function isLogged()
     {
     	if(isset($_COOKIE['userLogged'])){
-    		$user_array = unserialize(urldecode($_COOKIE['userLogged']));
+    		$user_array = json_decode(urldecode($_COOKIE['userLogged']));
     		if(isset($user_array['username'])){
     			return true;
     		}
@@ -147,9 +135,9 @@ class User extends Misc {
 		    		"rank" => $this->getRank($this->getUserId($user)) 
 		    	);
 
-		    	$login_array = urlencode(serialize($login_array));
+		    	$login_array = urlencode(json_encode($login_array));
 		    	setcookie("userLogged", $login_array, time()+72000);
-    			print_r(unserialize(urldecode($login_array)));
+    			print_r(json_decode(urldecode($login_array)));
 	    		
 	    	}else{
 	    		die("Wrong user/password combination !");

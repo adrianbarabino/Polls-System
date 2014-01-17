@@ -11,8 +11,7 @@ class Option extends Misc {
     protected $glob;
 
     public function __construct() {
-        global $GLOBALS;
-        $this->glob =& $GLOBALS;
+        $this->getDB();
     }
 
     public function getAllVotesByOption($id_option) 
@@ -23,19 +22,25 @@ class Option extends Misc {
             array("INNER", "options O", "V.id_option", "=", "O.id")            
             );
 
-        if($result = $this->advancedSelect("votes V",$fields_array,$where_array, $join_array)){
-			return $result->num_rows;
+        if($result = $this->_db->advancedSelect("votes V",$fields_array,$where_array, $join_array)){
+			return $this->_db->numRows($result);
 		}else{
 			// Error.... 
 			die("Error in the query");
 		}
 		
     }
-
+    public function isExist($id_option)
+    {
+    	// print_r($this->_db);
+		$result = $this->_db->simpleSelect("options O", "O.id", array("id", "=", $id_option));
+		return $this->_db->haveRows($result);
+		
+    }
     public function deleteOption($id_option)
     {
 		$where_array = array("id", "=", $id_option);
-		if($this->deleteToDB("options", $where_array)){
+		if($this->_db->deleteToDB("options", $where_array)){
 			// Option deleted sucefully ! 
 		}else{
 			// Error

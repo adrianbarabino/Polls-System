@@ -25,7 +25,7 @@ class Poll extends Misc {
             );
 
 		if($result = $this->advancedSelect("votes V",$fields_array,$where_array, $join_array)){
-			return $result->num_rows;
+			return $this->numRows($result);
 		}else{
 			// Error.... 
 			die("Error in the query");
@@ -42,7 +42,7 @@ class Poll extends Misc {
             );
 
         if($result = $this->advancedSelect("votes V",$fields_array,$where_array, $join_array)){
-			return $result->num_rows;
+			return $this->numRows($result);
 		}else{
 			// Error.... 
 			die("Error in the query");
@@ -60,7 +60,7 @@ class Poll extends Misc {
             );
 
         if($result = $this->advancedSelect("options O",$fields_array,$where_array, $join_array)){
-			return $result->num_rows;
+			return $this->numRows($result);
 		}else{
 			// Error.... 
 			die("Error in the query");

@@ -156,6 +156,82 @@ nav ul li:hover, nav ul li:hover a, nav ul li.activo a{
 }
 
 
+#poll-boxes{
+	display:block;
+	margin-bottom:2em;
+	padding:0 0.3em;
+
+}
+
+#poll-boxes .box{
+	position:relative;
+	width:32%;
+	margin: 0 0.3em;
+	height:120px;
+	display:inline-block;
+	z-index:2;
+	text-align:center;
+
+}
+
+#poll-boxes .box .inner-box ul li label span{
+	display: inline-block;
+	width: 75%;
+	text-align: left;
+}
+
+#poll-boxes .box .content-box, #poll-boxes .box .title-box,{
+	width:50%;
+	margin:0;
+	padding:0;
+	vertical-align: top;
+	display:inline-block;
+}
+#poll-boxes .box .title-box h2{
+	margin: 0.2em 0 0 0;
+}
+
+#poll-boxes .box .title-box p{
+	font-size:12px;
+	margin-top: 0em;
+}
+
+#poll-boxes .box .inner-box ul{
+	margin:0 auto;
+	width:90%;
+	padding:0;
+	list-style:none;
+}
+
+#poll-boxes .box .inner-box ul li{
+box-shadow: 0px 2px 0px 0px #DFDFDF, 0px 4px 0px 0px #F1F1F1;
+		font-size:18px;
+		line-height: 2em;
+		font-weight:800;
+}
+#poll-boxes .box .inner-box{
+	position:relative;
+	z-index:2;
+	margin:0;
+	padding:0;
+	background:#fff;
+	color:#222;
+	display:block;
+	height:120px;
+}
+
+#poll-boxes .box .content-box input[type=button]{
+	margin:1em 0;
+	font-weight: bold;
+	width:90%;
+
+}
+#poll-boxes .box .content-box span{
+	text-align:right;
+	font-weight:800;
+	display:block;
+	padding-right:1.2em;
+}
 
 /* Responsive Design */
 
@@ -164,6 +240,9 @@ nav ul li:hover, nav ul li:hover a, nav ul li.activo a{
 		width:70%;
 	}
 	#top-boxes .box{
+		width:30%;
+	}
+	#poll-boxes .box{
 		width:30%;
 	}
 }
@@ -181,4 +260,14 @@ nav ul li:hover, nav ul li:hover a, nav ul li.activo a{
 		display:block;
 		margin: 0.5em 1em;
 	}
+	#poll-boxes .box{
+		width:inherit;
+		height:auto;
+		display:block;
+		margin: 0.5em 1em;
+	}
+	#poll-boxes .box, #poll-boxes .inner-box{
+		height:auto!important;
+	}
 }
+
